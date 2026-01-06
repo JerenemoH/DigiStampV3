@@ -1,0 +1,5 @@
+{
+  "name": "Digital Stamp Rally",
+  "description": "A digital stamp rally application where users can collect stamps by scanning QR codes. Progress is saved locally in the browser.",
+  "requestFramePermissions": []
+}
