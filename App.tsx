@@ -3,14 +3,18 @@ import React, { useState, useEffect, useCallback } from 'react';
 import StampSlot from './components/StampSlot';
 import Header from './components/Header';
 import Toast from './components/Toast';
+import QRCodeGenerator from './components/QRCodeGenerator';
 
 const TOTAL_STAMPS = 6;
 const STORAGE_KEY = 'myStamps';
+
+type View = 'stamps' | 'qr';
 
 const App: React.FC = () => {
     const [collectedStamps, setCollectedStamps] = useState<number[]>([]);
     const [notification, setNotification] = useState<string | null>(null);
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
+    const [view, setView] = useState<View>('stamps');
 
     useEffect(() => {
         // 1. Load from localStorage on initial mount
@@ -76,6 +80,14 @@ const App: React.FC = () => {
 
     const allStampsCollected = collectedStamps.length === TOTAL_STAMPS;
 
+    if (view === 'qr') {
+        return <QRCodeGenerator 
+                    baseUrl="https://digistampv3.netlify.app/" 
+                    totalStamps={TOTAL_STAMPS} 
+                    onBack={() => setView('stamps')} 
+                />;
+    }
+
     return (
         <div className="min-h-screen flex flex-col items-center p-4 sm:p-6 lg:p-8 font-sans">
             <div className="w-full max-w-2xl mx-auto">
@@ -101,7 +113,13 @@ const App: React.FC = () => {
                     })}
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
+                     <button
+                        onClick={() => setView('qr')}
+                        className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                    >
+                        產生 QR Code
+                    </button>
                      <button
                         onClick={resetStamps}
                         className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
