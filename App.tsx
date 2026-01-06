@@ -4,9 +4,11 @@ import StampSlot from './components/StampSlot';
 import Header from './components/Header';
 import Toast from './components/Toast';
 import QRCodeGenerator from './components/QRCodeGenerator';
+import PasswordModal from './components/PasswordModal';
 
 const TOTAL_STAMPS = 6;
 const STORAGE_KEY = 'myStamps';
+const ADMIN_PASSWORD = '423609';
 
 type View = 'stamps' | 'qr';
 
@@ -15,6 +17,7 @@ const App: React.FC = () => {
     const [notification, setNotification] = useState<string | null>(null);
     const [isInitialized, setIsInitialized] = useState<boolean>(false);
     const [view, setView] = useState<View>('stamps');
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     useEffect(() => {
         // 1. Load from localStorage on initial mount
@@ -78,6 +81,19 @@ const App: React.FC = () => {
         showNotification("集章紀錄已重設！");
     };
 
+    const handleQRCodeAccess = () => {
+        setIsPasswordModalOpen(true);
+    };
+
+    const handlePasswordSubmit = (password: string) => {
+        if (password === ADMIN_PASSWORD) {
+            setView('qr');
+        } else {
+            showNotification("密碼錯誤！");
+        }
+        setIsPasswordModalOpen(false);
+    };
+
     const allStampsCollected = collectedStamps.length === TOTAL_STAMPS;
 
     if (view === 'qr') {
@@ -115,10 +131,10 @@ const App: React.FC = () => {
 
                 <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 space-y-4">
                      <button
-                        onClick={() => setView('qr')}
+                        onClick={handleQRCodeAccess}
                         className="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
                     >
-                        產生 QR Code
+                        展示 QR Code (需密碼)
                     </button>
                      <button
                         onClick={resetStamps}
@@ -128,6 +144,11 @@ const App: React.FC = () => {
                     </button>
                 </div>
             </div>
+            <PasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+                onSubmit={handlePasswordSubmit}
+            />
              {notification && (
                 <Toast 
                     message={notification} 

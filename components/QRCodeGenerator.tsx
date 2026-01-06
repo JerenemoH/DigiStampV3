@@ -51,13 +51,13 @@ const QRCodeGenerator: React.FC<QRCodeGeneratorProps> = ({ baseUrl, totalStamps,
                         &larr; 返回
                     </button>
                     <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-500 to-cyan-400">
-                        QR Code 產生器
+                        QR Code 展示
                     </h1>
                 </header>
 
                 {isLoading ? (
                     <div className="text-center">
-                        <p className="text-lg text-gray-500 dark:text-gray-400">正在產生 QR Code...</p>
+                        <p className="text-lg text-gray-500 dark:text-gray-400">正在載入 QR Code...</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
